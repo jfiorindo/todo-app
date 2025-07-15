@@ -9,6 +9,10 @@ const TarefaSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  dataExpiracao: {
+    type: Date,
+    required: false, // pode ser opcional
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Tarefa', TarefaSchema);

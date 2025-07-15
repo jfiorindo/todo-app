@@ -44,18 +44,22 @@ app.post('/login', (req, res) => {
 // POST /tasks - adicionar nova tarefa ao MongoDB
 app.post('/tasks', async (req, res) => {
   try {
-    const { texto } = req.body;
+    const { texto, dataExpiracao } = req.body;
     if (!texto) return res.status(400).json({ erro: 'Texto é obrigatório' });
 
-    const novaTarefa = new Tarefa({ texto });
-    const tarefaSalva = await novaTarefa.save();
+    const novaTarefa = new Tarefa({
+      texto,
+      dataExpiracao: dataExpiracao ? new Date(dataExpiracao) : undefined,
+    });
 
+    const tarefaSalva = await novaTarefa.save();
     res.status(201).json(tarefaSalva);
   } catch (err) {
     console.error('Erro ao salvar tarefa:', err);
     res.status(500).json({ erro: 'Erro interno no servidor' });
   }
 });
+
 
 
 // GET /tasks - listar todas as tarefas
@@ -68,19 +72,35 @@ app.get('/tasks', async (req, res) => {
   }
 });
 
-// PUT /tasks/:id - alternar status
+
+// PUT /tasks/:id - editar tarefa
 app.put('/tasks/:id', async (req, res) => {
   try {
-    const tarefa = await Tarefa.findById(req.params.id);
-    if (!tarefa) return res.status(404).json({ erro: 'Tarefa não encontrada' });
+    const { texto, feita, dataExpiracao } = req.body;
 
-    tarefa.feita = !tarefa.feita;
-    await tarefa.save();
-    res.json(tarefa);
+    const atualizacoes = {};
+    if (texto !== undefined) atualizacoes.texto = texto;
+    if (feita !== undefined) atualizacoes.feita = feita;
+    if (dataExpiracao !== undefined) atualizacoes.dataExpiracao = new Date(dataExpiracao);
+
+    const tarefaAtualizada = await Tarefa.findByIdAndUpdate(
+      req.params.id,
+      atualizacoes,
+      { new: true }
+    );
+
+    if (!tarefaAtualizada) {
+      return res.status(404).json({ erro: 'Tarefa não encontrada' });
+    }
+
+    res.json(tarefaAtualizada);
   } catch (err) {
-    res.status(500).json({ erro: 'Erro ao atualizar tarefa' });
+    console.error('Erro ao atualizar tarefa:', err);
+    res.status(500).json({ erro: 'Erro interno no servidor' });
   }
 });
+
+
 
 // DELETE /tasks/:id - excluir tarefa
 app.delete('/tasks/:id', async (req, res) => {
