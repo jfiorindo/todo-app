@@ -1,42 +1,50 @@
-# To-Do App com Login (React + Node.js)
+# To-Do App com Login (React + Node.js + MongoDB)
 
-Este projeto é uma aplicação de lista de tarefas com autenticação simples, desenvolvida com React no front-end e Node.js no back-end, utilizando API REST para comunicação entre as camadas.
+Este projeto é uma aplicação de lista de tarefas com autenticação simples, desenvolvida com React no front-end e Node.js no back-end. A comunicação entre as camadas é feita via API REST e os dados são persistidos em um banco de dados MongoDB.
 
-## Objetivo do Projeto
+## 🎯 Objetivo do Projeto
 
-O foco principal deste repositório é a organização e qualidade do versionamento com Git e GitHub. A proposta é demonstrar domínio em:
+O foco principal deste repositório é demonstrar domínio no **controle de versionamento com Git/GitHub**, além de apresentar uma arquitetura funcional de um projeto fullstack moderno.
 
-- Estruturação de branches por responsabilidade (`frontend`, `backend`, `main`)
-- Escrita de commits claros, descritivos e bem segmentados
-- Processo de desenvolvimento controlado por merges
-- Organização geral de um projeto fullstack
+**Destaques:**
+- Branches separadas por responsabilidade (`frontend`, `backend`, `main`)
+- Commits claros e descritivos com boa segmentação de funcionalidades
+- Uso de MongoDB para persistência de dados reais
+- Processo de desenvolvimento com merge controlado para branch `main`
 
-Neste momento, a prioridade está na estrutura de Git e na construção de um fluxo de trabalho limpo e rastreável. A qualidade do código ainda está em desenvolvimento contínuo, com ajustes e melhorias planejadas para etapas futuras.
+Neste estágio, a prioridade está na **estrutura e rastreabilidade do projeto**. A qualidade do código está em constante evolução, com refatorações planejadas conforme o ciclo de melhoria contínua.
 
-## Tecnologias Utilizadas
+## 🛠️ Tecnologias Utilizadas
 
-- Front-end: React com Vite
-- Back-end: Node.js com Express
-- Comunicação via API REST (fetch)
-- Gerenciamento de estado simples (React hooks)
+- **Front-end**: React + Vite
+- **Back-end**: Node.js + Express
+- **Banco de Dados**: MongoDB + Mongoose
+- **Comunicação**: API REST via `fetch`
+- **Gerenciamento de estado**: React Hooks
 
-## Funcionalidades Implementadas
+## ✅ Funcionalidades Implementadas
 
-- Tela de login funcional com verificação básica
-- API REST com endpoint `/login` e autenticação simulada
-- Integração entre front-end e back-end
-- Estrutura de pastas separada e organizada
-- Projeto final unificado na branch `main` para testes completos
+- Tela de login com verificação de credenciais fixas
+- API REST com rotas:
+  - `POST /login`
+  - `POST /tasks`
+  - `GET /tasks`
+  - `PUT /tasks/:id`
+  - `DELETE /tasks/:id`
+- Persistência das tarefas no MongoDB
+- Integração funcional entre front-end e back-end
+- Estrutura organizada em pastas com separação por responsabilidade
 
-## Estrutura de Pastas
+## 📁 Estrutura de Pastas
 
 todo-app/
-├── backend/         → API em Node.js
-├── frontend/        → Aplicação React
+├── backend/         → API em Node.js com MongoDB
+│   └── models/      → Modelos do banco de dados (Mongoose)
+├── frontend/        → Aplicação em React
 ├── README.md
 └── .gitignore
 
-## Como Executar Localmente
+## 🚀 Como Executar Localmente
 
 1. Clone o repositório:
    git clone https://github.com/jfiorindo/todo-app.git
@@ -47,26 +55,30 @@ todo-app/
    npm install
    node index.js
 
+   > Certifique-se de ter o MongoDB rodando localmente na porta `27017`.
+
 3. Inicie o front-end:
    cd ../frontend
    npm install
    npm run dev
 
-4. Acesse no navegador: http://localhost:5173
+4. Acesse no navegador:
+   http://localhost:5173
 
-Credenciais de teste:
-- Email: admin@teste.com
-- Senha: 1234
+### 🔐 Credenciais de Teste
 
-## Próximos Passos
+- **Email**: admin@teste.com  
+- **Senha**: 1234
 
-- Implementar banco de dados para autenticação real
-- Criar cadastro de usuários
-- Desenvolver o CRUD completo de tarefas
-- Melhorar a organização e escalabilidade do front-end
+## 📌 Próximos Passos
 
-## Autor
+- Autenticação real com banco de dados
+- Cadastro de usuários
+- Validação de sessão com tokens
+- Interface aprimorada com design responsivo
+- Upload e manipulação de dados complexos
+- Deploy da aplicação
 
-Desenvolvido por João Pedro Fiorindo Pinto  
-https://github.com/jfiorindo
+## 👨‍💻 Autor
 
+Desenvolvido por [João Pedro Fiorindo Pinto](https://github.com/jfiorindo)
