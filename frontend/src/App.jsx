@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Login from './components/login';
+import Tarefas from './components/tarefas';
 
 function App() {
   const [usuario, setUsuario] = useState(null);
