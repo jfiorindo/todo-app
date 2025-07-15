@@ -38,7 +38,7 @@ export default function Login({ onLogin }) {
   return (
     <div className="login-container">
       <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="login-form">
         <input
           type="email"
           placeholder="E-mail"
@@ -56,7 +56,7 @@ export default function Login({ onLogin }) {
         <button type="submit" disabled={carregando}>
           {carregando ? 'Entrando...' : 'Entrar'}
         </button>
-        {erro && <p style={{ color: 'red' }}>{erro}</p>}
+        {erro && <p>{erro}</p>}
       </form>
     </div>
   );
