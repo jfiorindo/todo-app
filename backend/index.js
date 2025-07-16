@@ -2,9 +2,13 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const Tarefa = require('./models/Tarefa');
+const Usuario = require('./models/Usuario');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3001;
+const SECRET = 'minha-chave-secreta';
 
 // Conexão com MongoDB
 mongoose.connect('mongodb://localhost:27017/todoapp', {
@@ -23,23 +27,79 @@ app.get('/', (req, res) => {
   res.send('API está rodando 🚀');
 });
 
-// Rota de login (fixa)
-app.post('/login', (req, res) => {
-  const { email, senha } = req.body;
+// Rota de registro de usuário
+app.post('/usuarios', async (req, res) => {
+  try {
+    const { nome, email, senha } = req.body;
 
-  if (email === 'admin@teste.com' && senha === '1234') {
+    if (!nome || !email || !senha) {
+      return res.status(400).json({ erro: 'Todos os campos são obrigatórios' });
+    }
+
+    const usuarioExistente = await Usuario.findOne({ email });
+    if (usuarioExistente) {
+      return res.status(409).json({ erro: 'Email já cadastrado' });
+    }
+
+    const senhaHash = await bcrypt.hash(senha, 10);
+    const novoUsuario = new Usuario({ nome, email, senha: senhaHash });
+    const salvo = await novoUsuario.save();
+
+    res.status(201).json({ mensagem: 'Usuário cadastrado com sucesso', usuario: salvo });
+  } catch (err) {
+    console.error('Erro ao registrar usuário:', err);
+    res.status(500).json({ erro: 'Erro interno no servidor' });
+  }
+});
+
+// Rota de login com autenticação real
+app.post('/login', async (req, res) => {
+  try {
+    const { email, senha } = req.body;
+    const usuario = await Usuario.findOne({ email });
+
+    if (!usuario) {
+      console.log('❌ Usuário não encontrado');
+      return res.status(401).json({ sucesso: false, mensagem: 'Credenciais inválidas' });
+    }
+
+    const confere = await bcrypt.compare(senha, usuario.senha);
+    console.log('🔐 Comparação da senha:', confere);
+
+    if (!confere) {
+      return res.status(401).json({ sucesso: false, mensagem: 'Credenciais inválidas' });
+    }
+
+    const token = jwt.sign({ id: usuario._id, nome: usuario.nome }, SECRET, { expiresIn: '1d' });
+
     res.json({
       sucesso: true,
       usuario: {
-        nome: 'Admin',
-        email: 'admin@teste.com',
-        token: 'fake-jwt-token-123',
+        nome: usuario.nome,
+        email: usuario.email,
+        token,
       },
     });
-  } else {
-    res.status(401).json({ sucesso: false, mensagem: 'Credenciais inválidas' });
+  } catch (err) {
+    console.error('Erro no login:', err);
+    res.status(500).json({ erro: 'Erro interno no servidor' });
   }
 });
+
+
+// Proteção com middleware (opcional, se quiser proteger rotas)
+function autenticarToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, SECRET, (err, usuario) => {
+    if (err) return res.sendStatus(403);
+    req.usuario = usuario;
+    next();
+  });
+}
 
 // POST /tasks - adicionar nova tarefa ao MongoDB
 app.post('/tasks', async (req, res) => {
@@ -60,8 +120,6 @@ app.post('/tasks', async (req, res) => {
   }
 });
 
-
-
 // GET /tasks - listar todas as tarefas
 app.get('/tasks', async (req, res) => {
   try {
@@ -71,7 +129,6 @@ app.get('/tasks', async (req, res) => {
     res.status(500).json({ erro: 'Erro ao buscar tarefas' });
   }
 });
-
 
 // PUT /tasks/:id - editar tarefa
 app.put('/tasks/:id', async (req, res) => {
@@ -99,8 +156,6 @@ app.put('/tasks/:id', async (req, res) => {
     res.status(500).json({ erro: 'Erro interno no servidor' });
   }
 });
-
-
 
 // DELETE /tasks/:id - excluir tarefa
 app.delete('/tasks/:id', async (req, res) => {
