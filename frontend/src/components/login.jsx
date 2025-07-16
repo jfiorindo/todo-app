@@ -1,11 +1,16 @@
 import { useState } from 'react';
 import '../styles/login.css';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState('');
+  const navigate = useNavigate();
+  const irParaCadastro = () => { navigate('/cadastro'); };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,6 +63,14 @@ export default function Login({ onLogin }) {
         </button>
         {erro && <p>{erro}</p>}
       </form>
+      
+      <div className="cadastro-redirect">
+        <p>Não tem uma conta?</p>
+        <button type="button" onClick={irParaCadastro}>
+          Cadastrar-se
+        </button>
+      </div>
+
     </div>
   );
 }

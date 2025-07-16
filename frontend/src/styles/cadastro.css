@@ -1,0 +1,73 @@
+.cadastro-container {
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.cadastro-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.cadastro-form input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.cadastro-form button {
+  padding: 12px;
+  border: none;
+  background: #6c63ff;
+  color: white;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.cadastro-form button:hover {
+  background: #574fdd;
+}
+
+.erro {
+  color: #d9534f;
+  font-size: 0.9rem;
+}
+
+.sucesso {
+  color: #5cb85c;
+  font-size: 0.9rem;
+}
+
+.login-redirect {
+  margin-top: 20px;
+}
+
+.login-redirect p {
+  margin-bottom: 8px;
+  color: #555;
+}
+
+.login-redirect button {
+  background: transparent;
+  border: 2px solid #6c63ff;
+  color: #6c63ff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.login-redirect button:hover {
+  background: #6c63ff;
+  color: white;
+}
+
