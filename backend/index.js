@@ -52,6 +52,30 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
+// PUT /usuarios/:email - atualizar nome e/ou senha
+app.put('/usuarios/:email', async (req, res) => {
+  try {
+    const { nome, senha } = req.body;
+    const atualizacoes = {};
+    if (nome) atualizacoes.nome = nome;
+    if (senha) atualizacoes.senha = await bcrypt.hash(senha, 10);
+
+    const atualizado = await Usuario.findOneAndUpdate(
+      { email: req.params.email },
+      atualizacoes,
+      { new: true }
+    );
+
+    if (!atualizado) return res.status(404).json({ erro: 'Usuário não encontrado' });
+
+    res.json({ mensagem: 'Perfil atualizado com sucesso', usuario: atualizado });
+  } catch (err) {
+    console.error('Erro ao atualizar perfil:', err);
+    res.status(500).json({ erro: 'Erro interno no servidor' });
+  }
+});
+
+
 // Rota de login com autenticação real
 app.post('/login', async (req, res) => {
   try {
@@ -85,21 +109,6 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ erro: 'Erro interno no servidor' });
   }
 });
-
-
-// Proteção com middleware (opcional, se quiser proteger rotas)
-function autenticarToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, SECRET, (err, usuario) => {
-    if (err) return res.sendStatus(403);
-    req.usuario = usuario;
-    next();
-  });
-}
 
 // POST /tasks - adicionar nova tarefa ao MongoDB
 app.post('/tasks', async (req, res) => {

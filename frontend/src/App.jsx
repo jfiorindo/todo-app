@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Login from './components/Login';
 import Tarefas from './components/tarefas';
 import Cadastro from './components/cadastro';
+import PerfilUsuario from './components/PerfilUsuario';
+
 
 
 function App() {
@@ -14,6 +16,7 @@ function App() {
         <Route path="/" element={<LoginWrapper setUsuario={setUsuario} />} />
         <Route path="/cadastro" element={<CadastroWrapper />} />
         <Route path="/tarefas" element={<Tarefas usuario={usuario} />} />
+        <Route path="/perfil" element={<PerfilUsuario usuario={usuario} />} />
       </Routes>
     </Router>
   );

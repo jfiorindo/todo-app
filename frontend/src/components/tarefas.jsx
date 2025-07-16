@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import '../styles/tarefas.css';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function Tarefas({ usuario }) {
   const [novaTarefa, setNovaTarefa] = useState('');
   const [novaDataExpiracao, setNovaDataExpiracao] = useState('');
   const [tarefas, setTarefas] = useState([]);
   const [carregando, setCarregando] = useState(true);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     async function carregarTarefas() {
@@ -109,6 +113,11 @@ export default function Tarefas({ usuario }) {
   };
 
   return (
+      <div className="tela-principal">
+        <button className="botao-perfil" onClick={() => navigate('/perfil')}>
+          Meu Perfil
+        </button>
+
     <div className="tarefas-container">
       <h2 className="titulo">Bem-vindo, {usuario.nome}</h2>
 
@@ -181,6 +190,7 @@ export default function Tarefas({ usuario }) {
           ))}
         </ul>
       )}
+    </div>
     </div>
   );
 }
