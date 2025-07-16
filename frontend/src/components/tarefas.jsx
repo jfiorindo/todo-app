@@ -10,7 +10,7 @@ export default function Tarefas({ usuario }) {
   useEffect(() => {
     async function carregarTarefas() {
       try {
-        const resposta = await fetch('http://localhost:3001/tasks');
+        const resposta = await fetch(`http://localhost:3001/tasks?email=${usuario.email}`);
         const dados = await resposta.json();
         setTarefas(dados);
       } catch (err) {
@@ -34,6 +34,7 @@ export default function Tarefas({ usuario }) {
         body: JSON.stringify({
           texto: novaTarefa,
           dataExpiracao: novaDataExpiracao,
+          email: usuario.email,
         }),
       });
 

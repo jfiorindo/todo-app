@@ -104,12 +104,16 @@ function autenticarToken(req, res, next) {
 // POST /tasks - adicionar nova tarefa ao MongoDB
 app.post('/tasks', async (req, res) => {
   try {
-    const { texto, dataExpiracao } = req.body;
-    if (!texto) return res.status(400).json({ erro: 'Texto é obrigatório' });
+    const { texto, dataExpiracao, email } = req.body;
+
+    if (!texto || !email) {
+      return res.status(400).json({ erro: 'Texto e email são obrigatórios' });
+    }
 
     const novaTarefa = new Tarefa({
       texto,
       dataExpiracao: dataExpiracao ? new Date(dataExpiracao) : undefined,
+      email,
     });
 
     const tarefaSalva = await novaTarefa.save();
@@ -120,15 +124,22 @@ app.post('/tasks', async (req, res) => {
   }
 });
 
+
 // GET /tasks - listar todas as tarefas
 app.get('/tasks', async (req, res) => {
   try {
-    const tarefas = await Tarefa.find();
+    const email = req.query.email;
+    if (!email) {
+      return res.status(400).json({ erro: 'Email é obrigatório na requisição' });
+    }
+
+    const tarefas = await Tarefa.find({ email });
     res.json(tarefas);
   } catch (err) {
     res.status(500).json({ erro: 'Erro ao buscar tarefas' });
   }
 });
+
 
 // PUT /tasks/:id - editar tarefa
 app.put('/tasks/:id', async (req, res) => {

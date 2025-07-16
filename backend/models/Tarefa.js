@@ -1,18 +1,10 @@
 const mongoose = require('mongoose');
 
-const TarefaSchema = new mongoose.Schema({
-  texto: {
-    type: String,
-    required: true,
-  },
-  feita: {
-    type: Boolean,
-    default: false,
-  },
-  dataExpiracao: {
-    type: Date,
-    required: false, // pode ser opcional
-  }
+const tarefaSchema = new mongoose.Schema({
+  texto: { type: String, required: true },
+  feita: { type: Boolean, default: false },
+  dataExpiracao: { type: Date },
+  email: { type: String, required: true }, // <- vincula ao usuário
 }, { timestamps: true });
 
-module.exports = mongoose.model('Tarefa', TarefaSchema);
+module.exports = mongoose.model('Tarefa', tarefaSchema);
