@@ -8,7 +8,12 @@ import PerfilUsuario from './components/PerfilUsuario';
 
 
 function App() {
-  const [usuario, setUsuario] = useState(null);
+  const [usuario, setUsuario] = useState(() => {
+    const salvo = localStorage.getItem('usuario');
+    return salvo ? JSON.parse(salvo) : null;
+  });
+
+
 
   return (
     <Router>
@@ -26,9 +31,11 @@ function LoginWrapper({ setUsuario }) {
   const navigate = useNavigate();
 
   const handleLogin = (user) => {
-    setUsuario(user);          // Salva o usuário logado
-    navigate('/tarefas');      // Redireciona após login
+  setUsuario(user); // Salva no estado
+  localStorage.setItem('usuario', JSON.stringify(user)); // Salva no localStorage
+  navigate('/tarefas');
   };
+
 
   return <Login onLogin={handleLogin} />;
 }
